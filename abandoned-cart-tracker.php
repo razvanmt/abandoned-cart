@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Abandoned Cart Tracker
  * Plugin URI: https://github.com/razvanmt/abandoned-cart
  * Description: Comprehensive WooCommerce plugin to track abandoned carts, analyze user behavior, and provide detailed statistics in the WordPress admin.
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: Razvan Turc
  * Author URI: https://github.com/razvanmt
  * License: GPL v2 or later
@@ -33,7 +33,7 @@ if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get
 // Define plugin constants
 define('ACT_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('ACT_PLUGIN_PATH', plugin_dir_path(__FILE__));
-define('ACT_VERSION', '1.0.3');
+define('ACT_VERSION', '1.0.4');
 
 // Declare HPOS compatibility
 add_action('before_woocommerce_init', function() {
