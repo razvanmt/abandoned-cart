@@ -170,3 +170,4 @@ For support and feature requests, please refer to the plugin documentation or co
 ## License
 
 This plugin is licensed under the GPL v2 or later.
+# Testing workflow fix
