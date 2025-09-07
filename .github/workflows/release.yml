@@ -8,6 +8,8 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     
     steps:
     - name: Checkout code
@@ -20,20 +22,24 @@ jobs:
     - name: Create Release ZIP
       run: |
         # Create a clean directory for the plugin
-        mkdir -p wordpress-plugin
+        mkdir -p wordpress-plugin/abandoned-cart
         
         # Copy plugin files (exclude development files)
-        rsync -av --exclude='.git*' \
-                  --exclude='node_modules' \
-                  --exclude='*.sh' \
-                  --exclude='UPDATE-SETUP.md' \
-                  --exclude='.github' \
-                  . wordpress-plugin/abandoned-cart-tracker/
+        cp -r . wordpress-plugin/abandoned-cart/
+        
+        # Remove development files from the copy
+        rm -rf wordpress-plugin/abandoned-cart/.git*
+        rm -rf wordpress-plugin/abandoned-cart/.github
+        rm -f wordpress-plugin/abandoned-cart/*.sh
+        rm -f wordpress-plugin/abandoned-cart/UPDATE-SETUP.md
         
         # Create ZIP file
         cd wordpress-plugin
-        zip -r ../abandoned-cart-tracker-${{ steps.get_version.outputs.VERSION }}.zip .
+        zip -r ../abandoned-cart-${{ steps.get_version.outputs.VERSION }}.zip .
         cd ..
+        
+        # Verify ZIP was created
+        ls -la abandoned-cart-${{ steps.get_version.outputs.VERSION }}.zip
         
     - name: Extract changelog from tag message
       id: changelog
@@ -48,12 +54,10 @@ jobs:
         echo "EOF" >> $GITHUB_OUTPUT
         
     - name: Create GitHub Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ github.ref }}
-        release_name: WooCommerce Abandoned Cart Tracker v${{ steps.get_version.outputs.VERSION }}
+        name: WooCommerce Abandoned Cart Tracker v${{ steps.get_version.outputs.VERSION }}
         body: |
           ## What's Changed
           
@@ -74,15 +78,10 @@ jobs:
           - WordPress 5.0+
           - WooCommerce 3.0+
           - PHP 7.4+
+          - HPOS Compatible
         draft: false
         prerelease: false
-        
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
+        files: |
+          abandoned-cart-${{ steps.get_version.outputs.VERSION }}.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./abandoned-cart-tracker-${{ steps.get_version.outputs.VERSION }}.zip
-        asset_name: abandoned-cart-tracker-${{ steps.get_version.outputs.VERSION }}.zip
-        asset_content_type: application/zip

@@ -27,7 +27,7 @@ git add .
 git commit -m "Initial commit - WooCommerce Abandoned Cart Tracker v1.0.0"
 
 # Add GitHub remote (replace with your repository URL)
-git remote add origin https://github.com/YOUR-USERNAME/abandoned-cart-tracker.git
+git remote add origin https://github.com/YOUR-USERNAME/abandoned-cart.git
 
 # Push to GitHub
 git push -u origin main
@@ -41,7 +41,7 @@ Edit `abandoned-cart-tracker.php` and replace these values:
 new ACT_Plugin_Updater(
     __FILE__,
     'YOUR-GITHUB-USERNAME',      // Your actual GitHub username
-    'abandoned-cart-tracker',    // Your repository name
+    'abandoned-cart',    // Your repository name
     'ghp_your_token_here'       // Optional: Personal Access Token for private repos
 );
 ```
