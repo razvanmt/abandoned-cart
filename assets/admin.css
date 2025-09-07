@@ -1,0 +1,345 @@
+/* Abandoned Cart Tracker Admin Styles */
+
+.act-admin-wrap {
+    margin: 20px 0;
+}
+
+/* Header Section */
+.act-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px 20px;
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.act-period-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.act-period-selector label {
+    font-weight: 600;
+    margin: 0;
+}
+
+.act-period-selector select {
+    min-width: 150px;
+}
+
+/* Loading State */
+.act-loading {
+    text-align: center;
+    padding: 40px;
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+}
+
+.act-loading .spinner {
+    float: none;
+    margin: 0 auto 10px;
+}
+
+/* Summary Cards */
+.act-summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.act-revenue-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.act-card {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.act-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+
+.act-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.act-card-header h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.act-icon {
+    font-size: 20px;
+    opacity: 0.7;
+}
+
+.act-card-content .act-number {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2271b1;
+    margin-bottom: 5px;
+}
+
+.act-card-content .act-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Card Variants */
+.act-card-danger .act-number {
+    color: #d63638;
+}
+
+.act-card-danger .act-icon {
+    color: #d63638;
+}
+
+.act-card-success .act-number {
+    color: #00a32a;
+}
+
+.act-card-success .act-icon {
+    color: #00a32a;
+}
+
+.act-card-warning .act-number {
+    color: #f9a825;
+}
+
+.act-card-warning .act-icon {
+    color: #f9a825;
+}
+
+.act-card-revenue-lost .act-number {
+    color: #d63638;
+}
+
+.act-card-revenue-lost .act-icon {
+    color: #d63638;
+}
+
+.act-card-revenue-recovered .act-number {
+    color: #00a32a;
+}
+
+.act-card-revenue-recovered .act-icon {
+    color: #00a32a;
+}
+
+/* Charts Section */
+.act-charts-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.act-chart-container {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.act-chart-header {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.act-chart-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.act-chart-content {
+    position: relative;
+    height: 300px;
+}
+
+/* Tables Section */
+.act-table-section {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.act-table-header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.act-table-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.act-table-content {
+    padding: 0;
+}
+
+.act-table-content table {
+    margin: 0;
+    border: none;
+}
+
+.act-table-content .act-no-data {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Status indicators */
+.act-status-abandoned {
+    color: #d63638;
+    font-weight: 600;
+}
+
+.act-status-converted {
+    color: #00a32a;
+    font-weight: 600;
+}
+
+.act-status-pending {
+    color: #f9a825;
+    font-weight: 600;
+}
+
+/* Help Section */
+.act-help-section {
+    background: #f6f7f7;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.act-help-section h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #333;
+}
+
+.act-help-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.act-help-item h4 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2271b1;
+}
+
+.act-help-item p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .act-charts-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 782px) {
+    .act-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .act-period-selector {
+        justify-content: center;
+    }
+    
+    .act-summary-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .act-revenue-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .act-help-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Admin notice styles */
+.act-admin-wrap .notice {
+    margin: 5px 0 15px;
+}
+
+/* Currency formatting */
+.act-currency {
+    font-family: monospace;
+}
+
+/* Button styling */
+#act-refresh.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+#act-export:hover {
+    background-color: #f6f7f7;
+    border-color: #0073aa;
+}
+
+/* Table hover effects */
+.act-table-content tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Loading animation */
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+.act-loading p {
+    animation: pulse 1.5s ease-in-out infinite;
+    margin: 0;
+    color: #666;
+}
