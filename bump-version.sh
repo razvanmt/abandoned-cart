@@ -35,7 +35,7 @@ fi
 
 # Show what will be committed
 echo "📋 Changes to be committed:"
-git diff --name-only
+git diff --name-only | cat
 
 # Commit changes
 echo "💾 Committing changes..."
