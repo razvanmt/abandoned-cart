@@ -21,22 +21,24 @@ jobs:
       
     - name: Create Release ZIP
       run: |
-        # Create a clean directory for the plugin
-        mkdir -p wordpress-plugin/abandoned-cart
+        # Create a temporary directory for the plugin
+        mkdir -p /tmp/plugin-build/abandoned-cart
         
         # Copy plugin files (exclude development files)
-        cp -r . wordpress-plugin/abandoned-cart/
-        
-        # Remove development files from the copy
-        rm -rf wordpress-plugin/abandoned-cart/.git*
-        rm -rf wordpress-plugin/abandoned-cart/.github
-        rm -f wordpress-plugin/abandoned-cart/*.sh
-        rm -f wordpress-plugin/abandoned-cart/UPDATE-SETUP.md
+        rsync -av \
+          --exclude='.git*' \
+          --exclude='.github' \
+          --exclude='*.sh' \
+          --exclude='UPDATE-SETUP.md' \
+          --exclude='wordpress-plugin' \
+          ./ /tmp/plugin-build/abandoned-cart/
         
         # Create ZIP file
-        cd wordpress-plugin
-        zip -r ../abandoned-cart-${{ steps.get_version.outputs.VERSION }}.zip .
-        cd ..
+        cd /tmp/plugin-build
+        zip -r $GITHUB_WORKSPACE/abandoned-cart-${{ steps.get_version.outputs.VERSION }}.zip .
+        
+        # Return to workspace
+        cd $GITHUB_WORKSPACE
         
         # Verify ZIP was created
         ls -la abandoned-cart-${{ steps.get_version.outputs.VERSION }}.zip
