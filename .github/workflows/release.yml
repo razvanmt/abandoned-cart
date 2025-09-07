@@ -41,17 +41,29 @@ jobs:
         # Verify ZIP was created
         ls -la abandoned-cart-${{ steps.get_version.outputs.VERSION }}.zip
         
+        # Show ZIP contents for debugging
+        echo "ZIP contents:"
+        unzip -l abandoned-cart-${{ steps.get_version.outputs.VERSION }}.zip
+        
     - name: Extract changelog from tag message
       id: changelog
       run: |
         # Get tag annotation or commit message
-        CHANGELOG=$(git tag -l --format='%(contents)' ${GITHUB_REF#refs/tags/})
-        if [ -z "$CHANGELOG" ]; then
+        TAG_NAME=${GITHUB_REF#refs/tags/}
+        CHANGELOG=$(git tag -l --format='%(contents)' "$TAG_NAME" 2>/dev/null || echo "")
+        if [ -z "$CHANGELOG" ] || [ "$CHANGELOG" = " " ]; then
           CHANGELOG="Release ${{ steps.get_version.outputs.VERSION }}"
         fi
         echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
         echo "$CHANGELOG" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
+        
+    - name: Debug before release
+      run: |
+        echo "Version: ${{ steps.get_version.outputs.VERSION }}"
+        echo "Tag: ${{ github.ref }}"
+        echo "Files to upload:"
+        ls -la *.zip
         
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
