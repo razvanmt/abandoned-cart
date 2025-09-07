@@ -65,35 +65,36 @@ jobs:
         echo "Files to upload:"
         ls -la *.zip
         
-    - name: Create GitHub Release
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: ${{ github.ref }}
-        name: WooCommerce Abandoned Cart Tracker v${{ steps.get_version.outputs.VERSION }}
-        body: |
-          ## What's Changed
-          
-          ${{ steps.changelog.outputs.CHANGELOG }}
-          
-          ## Installation
-          
-          1. Download the ZIP file below
-          2. Go to WordPress Admin → Plugins → Add New → Upload Plugin
-          3. Upload the ZIP file and activate
-          
-          ## Automatic Updates
-          
-          If you already have the plugin installed, you'll receive an update notification in your WordPress admin within 12 hours.
-          
-          ## Requirements
-          
-          - WordPress 5.0+
-          - WooCommerce 3.0+
-          - PHP 7.4+
-          - HPOS Compatible
-        draft: false
-        prerelease: false
-        files: |
+    - name: Create GitHub Release with CLI
+      run: |
+        # Create release notes
+        cat > release_notes.md << 'EOF'
+        ## What's Changed
+        
+        ${{ steps.changelog.outputs.CHANGELOG }}
+        
+        ## Installation
+        
+        1. Download the ZIP file below
+        2. Go to WordPress Admin → Plugins → Add New → Upload Plugin
+        3. Upload the ZIP file and activate
+        
+        ## Automatic Updates
+        
+        If you already have the plugin installed, you'll receive an update notification in your WordPress admin within 12 hours.
+        
+        ## Requirements
+        
+        - WordPress 5.0+
+        - WooCommerce 3.0+
+        - PHP 7.4+
+        - HPOS Compatible
+        EOF
+        
+        # Create the release using GitHub CLI
+        gh release create v${{ steps.get_version.outputs.VERSION }} \
+          --title "WooCommerce Abandoned Cart Tracker v${{ steps.get_version.outputs.VERSION }}" \
+          --notes-file release_notes.md \
           abandoned-cart-${{ steps.get_version.outputs.VERSION }}.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
