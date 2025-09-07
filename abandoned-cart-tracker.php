@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: WooCommerce Abandoned Cart Tracker
- * Plugin URI: https://example.com/
+ * Plugin URI: https://github.com/razvanmt/abandoned-cart
  * Description: Comprehensive WooCommerce plugin to track abandoned carts, analyze user behavior, and provide detailed statistics in the WordPress admin.
- * Version: 1.0.0
- * Author: Your Name
- * Author URI: https://example.com/
+ * Version: 1.0.1
+ * Author: Razvan Turc
+ * Author URI: https://github.com/razvanmt
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: abandoned-cart-tracker
@@ -64,8 +64,8 @@ class WC_Abandoned_Cart_Tracker {
         if (is_admin()) {
             new ACT_Plugin_Updater(
                 __FILE__,
-                'your-github-username',  // Replace with your GitHub username
-                'abandoned-cart-tracker', // Replace with your repository name
+                'razvanmt',  // Replace with your GitHub username
+                'abandoned-cart', // Replace with your repository name
                 ''                       // Optional: GitHub access token for private repos
             );
         }
