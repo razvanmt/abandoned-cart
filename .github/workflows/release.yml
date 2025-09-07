@@ -1,0 +1,88 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Get version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      
+    - name: Create Release ZIP
+      run: |
+        # Create a clean directory for the plugin
+        mkdir -p wordpress-plugin
+        
+        # Copy plugin files (exclude development files)
+        rsync -av --exclude='.git*' \
+                  --exclude='node_modules' \
+                  --exclude='*.sh' \
+                  --exclude='UPDATE-SETUP.md' \
+                  --exclude='.github' \
+                  . wordpress-plugin/abandoned-cart-tracker/
+        
+        # Create ZIP file
+        cd wordpress-plugin
+        zip -r ../abandoned-cart-tracker-${{ steps.get_version.outputs.VERSION }}.zip .
+        cd ..
+        
+    - name: Extract changelog from tag message
+      id: changelog
+      run: |
+        # Get tag annotation or commit message
+        CHANGELOG=$(git tag -l --format='%(contents)' ${GITHUB_REF#refs/tags/})
+        if [ -z "$CHANGELOG" ]; then
+          CHANGELOG="Release ${{ steps.get_version.outputs.VERSION }}"
+        fi
+        echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+        echo "$CHANGELOG" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+        
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: WooCommerce Abandoned Cart Tracker v${{ steps.get_version.outputs.VERSION }}
+        body: |
+          ## What's Changed
+          
+          ${{ steps.changelog.outputs.CHANGELOG }}
+          
+          ## Installation
+          
+          1. Download the ZIP file below
+          2. Go to WordPress Admin → Plugins → Add New → Upload Plugin
+          3. Upload the ZIP file and activate
+          
+          ## Automatic Updates
+          
+          If you already have the plugin installed, you'll receive an update notification in your WordPress admin within 12 hours.
+          
+          ## Requirements
+          
+          - WordPress 5.0+
+          - WooCommerce 3.0+
+          - PHP 7.4+
+        draft: false
+        prerelease: false
+        
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./abandoned-cart-tracker-${{ steps.get_version.outputs.VERSION }}.zip
+        asset_name: abandoned-cart-tracker-${{ steps.get_version.outputs.VERSION }}.zip
+        asset_content_type: application/zip

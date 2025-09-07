@@ -13,7 +13,8 @@
  * Requires at least: 5.0
  * Tested up to: 6.4
  * WC requires at least: 3.0
- * WC tested up to: 8.0
+ * WC tested up to: 8.5
+ * Requires Plugins: woocommerce
  */
 
 // Prevent direct access
@@ -32,7 +33,14 @@ if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get
 // Define plugin constants
 define('ACT_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('ACT_PLUGIN_PATH', plugin_dir_path(__FILE__));
-define('ACT_VERSION', '1.0.0');
+define('ACT_VERSION', '1.0.1');
+
+// Declare HPOS compatibility
+add_action('before_woocommerce_init', function() {
+    if (class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true);
+    }
+});
 
 // Include the updater class
 require_once ACT_PLUGIN_PATH . 'includes/plugin-updater.php';
@@ -72,9 +80,16 @@ class WC_Abandoned_Cart_Tracker {
         
         // Hook into WooCommerce events
         add_action('woocommerce_add_to_cart', array($this, 'track_add_to_cart'), 10, 6);
+        
+        // Order status hooks (HPOS compatible)
         add_action('woocommerce_order_status_completed', array($this, 'mark_cart_as_converted'));
         add_action('woocommerce_order_status_processing', array($this, 'mark_cart_as_converted'));
+        add_action('woocommerce_payment_complete', array($this, 'mark_cart_as_converted'));
         add_action('woocommerce_thankyou', array($this, 'mark_cart_as_converted'));
+        
+        // Additional HPOS-compatible hooks
+        add_action('woocommerce_checkout_order_processed', array($this, 'mark_cart_as_converted'), 10, 1);
+        add_action('woocommerce_store_api_checkout_order_processed', array($this, 'mark_cart_as_converted'), 10, 1);
         
         // Admin hooks
         add_action('admin_menu', array($this, 'add_admin_menu'));
@@ -222,6 +237,7 @@ class WC_Abandoned_Cart_Tracker {
     public function mark_cart_as_converted($order_id) {
         global $wpdb;
         
+        // Get order using WooCommerce method (HPOS compatible)
         $order = wc_get_order($order_id);
         if (!$order) return;
         
@@ -229,7 +245,18 @@ class WC_Abandoned_Cart_Tracker {
         $user_id = $order->get_user_id();
         $user_email = $order->get_billing_email();
         
-        // Update records based on session, user ID, or email
+        // Get order items to match against cart products
+        $order_items = $order->get_items();
+        $order_product_ids = array();
+        
+        foreach ($order_items as $item) {
+            $product_id = $item->get_product_id();
+            if ($product_id) {
+                $order_product_ids[] = $product_id;
+            }
+        }
+        
+        // Update records based on session, user ID, email, or product IDs
         $where_conditions = array();
         $where_values = array();
         
@@ -246,6 +273,13 @@ class WC_Abandoned_Cart_Tracker {
         if (!empty($user_email)) {
             $where_conditions[] = "user_email = %s";
             $where_values[] = $user_email;
+        }
+        
+        // Also match by product IDs in the order (more accurate for HPOS)
+        if (!empty($order_product_ids)) {
+            $product_placeholders = implode(',', array_fill(0, count($order_product_ids), '%d'));
+            $where_conditions[] = "product_id IN ($product_placeholders)";
+            $where_values = array_merge($where_values, $order_product_ids);
         }
         
         if (!empty($where_conditions)) {

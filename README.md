@@ -27,6 +27,7 @@ A comprehensive WordPress plugin for tracking abandoned carts in WooCommerce, pr
 - WooCommerce 3.0 or higher
 - PHP 7.4 or higher
 - MySQL 5.6 or higher
+- **HPOS Compatible**: Fully supports WooCommerce High-Performance Order Storage
 
 ## How It Works
 
